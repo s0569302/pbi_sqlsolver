@@ -1,0 +1,66 @@
+CREATE TABLE Verkaufsgebiet (
+  VGID NUMBER PRIMARY KEY,
+  Obergebiet NUMBER REFERENCES Verkaufsgebiet(VGID),
+  Bez VARCHAR2,
+  Ebene VARCHAR2
+);
+
+CREATE TABLE Kunde (
+  KID NUMBER PRIMARY KEY,
+  VGID NUMBER REFERENCES Verkaufsgebiet(VGID),
+  Name VARCHAR2,
+  Titel VARCHAR2
+);
+
+CREATE TABLE Bestellung (
+  BID NUMBER PRIMARY KEY,
+  KID NUMBER REFERENCES Kunde(KID),
+  Bestelldatum DATE,
+  Gesamtpreis NUMBER
+);
+
+CREATE TABLE Bestellposition (
+  BID NUMBER PRIMARY KEY REFERENCES Bestellung(BID),
+  PID NUMBER PRIMARY KEY REFERENCES Produkt(PID),
+  VID NUMBER REFERENCES Versand(VID),
+  Menge NUMBER,
+  Einzelpreis NUMBER
+);
+
+CREATE TABLE Versand (
+  VID NUMBER PRIMARY KEY,
+  Versanddatum DATE,
+  Lieferdatum DATE
+);
+
+CREATE TABLE Produkt (
+  PID NUMBER PRIMARY KEY,
+  Bez VARCHAR2,
+  Laenge NUMBER,
+  Breite NUMBER
+);
+
+CREATE TABLE Preis (
+  PLID NUMBER PRIMARY KEY REFERENCES Preisliste(PLID),
+  PID NUMBER PRIMARY KEY REFERENCES Produkt(PID),
+  Betrag NUMBER
+);
+
+CREATE TABLE Preisliste (
+  PLID NUMBER PRIMARY KEY,
+  Datum_von DATE,
+  Datum_bis DATE
+);
+
+CREATE TABLE Produktkategorie (
+  PID NUMBER PRIMARY KEY REFERENCES Produkt(PID),
+  KID NUMBER PRIMARY KEY REFERENCES Kategorie(KID),
+  HK NUMBER
+);
+
+CREATE TABLE Kategorie (
+  KID NUMBER PRIMARY KEY,
+  Oberkategorie NUMBER REFERENCES Kategorie(KID),
+  Bez VARCHAR2,
+  Ebene VARCHAR2
+);

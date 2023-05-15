@@ -38,3 +38,48 @@ def excel_to_json(excel_file):
         json.dump(table_structure, file, indent=None, ensure_ascii=False)
 
     return table_structure
+
+
+def generate_oracle_ddl(json_data):
+    ddl_statements = []
+
+    # Iterate over each table in the JSON data
+    for table in json_data['tables']:
+        table_name = table['name']
+        columns = table['columns']
+
+        # Generate the CREATE TABLE statement
+        ddl = f"CREATE TABLE {table_name} (\n"
+
+        # Generate the column definitions
+        column_definitions = []
+        for column in columns:
+            column_name = column['name']
+            data_type = column['type']
+            primary_key = column['primary_key']
+            foreign_key = column.get('foreign_key')
+
+            # Generate the column definition
+            column_def = f"  {column_name} {data_type}"
+
+            # Add PRIMARY KEY constraint
+            if primary_key:
+                column_def += " PRIMARY KEY"
+
+            # Add FOREIGN KEY constraint
+            if foreign_key:
+                foreign_table = foreign_key['table']
+                foreign_column = foreign_key['column']
+                column_def += f" REFERENCES {foreign_table}({foreign_column})"
+
+            column_definitions.append(column_def)
+
+        ddl += ",\n".join(column_definitions)
+        ddl += "\n);"
+
+        ddl_statements.append(ddl)
+
+        with open("files/oracle_ddl.sql", 'w') as file:
+            file.write("\n\n".join(ddl_statements))
+
+    return "\n\n".join(ddl_statements)
