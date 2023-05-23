@@ -34,7 +34,7 @@ def excel_to_json(excel_file):
         table_structure["tables"].append(table_data)
 
     # Write the table structure JSON directly to the file
-    with open("files/converted_json.json", 'w') as file:
+    with open("pbi_sqlsolver/files/converted_json.json", 'w') as file:
         json.dump(table_structure, file, indent=None, ensure_ascii=False)
 
     return table_structure
@@ -79,7 +79,7 @@ def generate_oracle_ddl(json_data):
 
         ddl_statements.append(ddl)
 
-        with open("files/oracle_ddl.sql", 'w') as file:
+        with open("pbi_sqlsolver/files/oracle_ddl.sql", 'w') as file:
             file.write("\n\n".join(ddl_statements))
 
     return "\n\n".join(ddl_statements)
